@@ -6,7 +6,7 @@ import banking.objeckt.Account;
 import banking.objeckt.Currency;
 import banking.objeckt.OperationsHistory;
 import banking.objeckt.Users;
-import banking.repsitory.SerializableAndDesirializable;
+import banking.service.SerializableAndDesirializable;
 
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -14,71 +14,71 @@ import java.util.*;
 import static banking.objeckt.Currency.BYN;
 
 public class UsersOperation implements AbstractClientOperation {
-    private Scanner inNumber=new Scanner(System.in);
-    private Scanner inText=new Scanner(System.in);
-SerializableAndDesirializable serializableAndDesirializable=new SerializableAndDesirializable();
-Opetaions opetaions = new Opetaions();
+    private Scanner inNumber = new Scanner(System.in);
+    private Scanner inText = new Scanner(System.in);
+    SerializableAndDesirializable serializableAndDesirializable = new SerializableAndDesirializable();
+    Opetaions opetaions = new Opetaions();
+
     @Override
-    public void curencyExchange(int numberWith, int numberIn,double money) {
+    public void curencyExchange(int numberWith, int numberIn, double money) {
         try {
             List<Account> accountList = serializableAndDesirializable.deserializeAccount();
             Double comissionsKoef = opetaions.searchTransferCoefficient(accountList, numberWith, 999);
             double tempMoneyCom = money * 0.01 * comissionsKoef;
             boolean flagOperations;
-            if(accountList.get(opetaions.searchByAccountNumber(accountList, numberWith)).getMoney()>money+money*0.01) {
-               flagOperations=true;
+            if (accountList.get(opetaions.searchByAccountNumber(accountList, numberWith)).getMoney() > money + money * 0.01) {
+                flagOperations = true;
                 accountList.get(opetaions.searchByAccountNumber(accountList, numberWith)).setMoney(accountList.get(opetaions.searchByAccountNumber(accountList, numberWith)).getMoney() - (money - tempMoneyCom));
                 opetaions.addSummComissions(tempMoneyCom);
                 //вызвать метод перевода пени на счет комиссий
                 Double koef = opetaions.searchTransferCoefficient(accountList, numberWith, numberIn);
                 accountList.get(opetaions.searchByAccountNumber(accountList, numberIn)).setMoney(accountList.get(opetaions.searchByAccountNumber(accountList, numberIn)).getMoney() + money * koef);
-                opetaions.creatingOperations(numberIn, numberWith, money, tempMoneyCom,flagOperations);
+                opetaions.creatingOperations(numberIn, numberWith, money, tempMoneyCom, flagOperations);
                 serializableAndDesirializable.serializableAccount(accountList);
-            }else{
-                flagOperations=false;
-                opetaions.creatingOperations(999, numberWith, money, tempMoneyCom,flagOperations);
+            } else {
+                flagOperations = false;
+                opetaions.creatingOperations(999, numberWith, money, tempMoneyCom, flagOperations);
                 serializableAndDesirializable.serializableAccount(accountList);
                 throw new TransferException("Недостаточно денег на балансе");
             }
-        }catch (TransferException e){
+        } catch (TransferException e) {
             System.err.println(e.getMessage());
         }
     }
 
     @Override
-    public void transferringFundsToAnotherAccoint(int numberWith, int numberIn,double money) {
-curencyExchange(numberWith,numberIn,money);
+    public void transferringFundsToAnotherAccoint(int numberWith, int numberIn, double money) {
+        curencyExchange(numberWith, numberIn, money);
     }
-
 
 
     @Override
     public void viewAccountBalance(Users user) {
-opetaions.outputInformation(user);
+        opetaions.outputInformation(user);
     }
 
     @Override
     public void viewCurrentRates() {
-            Set<Map.Entry<String, Double>> entrySet = serializableAndDesirializable.deserializeCurrency();
-            for (Map.Entry<String, Double> a:entrySet) {
-                System.out.print(a + "; ");
-            }
+        Set<Map.Entry<String, Double>> entrySet = serializableAndDesirializable.deserializeCurrency();
+        for (Map.Entry<String, Double> a : entrySet) {
+            System.out.print(a + "; ");
+        }
     }
 
     @Override
-    public void creatingAnAccount(Users user,String curency) {
-            List<Account> accountsList = serializableAndDesirializable.deserializeAccount();
-            Account newAccount = new Account(user.getId(),opetaions.generateNumberAccount(accountsList), opetaions.choiceCurrency(curency), 0.0);
-            accountsList.add(newAccount);
-            serializableAndDesirializable.serializableAccount(accountsList);
+    public void creatingAnAccount(Users user, String curency) {
+        List<Account> accountsList = serializableAndDesirializable.deserializeAccount();
+        Account newAccount = new Account(user.getId(), opetaions.generateNumberAccount(accountsList), opetaions.choiceCurrency(curency), 0.0);
+        accountsList.add(newAccount);
+        serializableAndDesirializable.serializableAccount(accountsList);
     }
 
     @Override
-    public void depositingMoneyIntoAnAccount(Users user,int number, Double money) {
+    public void depositingMoneyIntoAnAccount(Users user, int number, Double money) {
         List<Account> accountsList = serializableAndDesirializable.deserializeAccount();
         List<Double> commisions = serializableAndDesirializable.deserializeCommisions();
-        accountsList.get(opetaions.searchByAccountNumber(accountsList, number)).setMoney(accountsList.get(opetaions.searchByAccountNumber(accountsList, number)).getMoney()+money);
-        double peny=money*0.01;
+        accountsList.get(opetaions.searchByAccountNumber(accountsList, number)).setMoney(accountsList.get(opetaions.searchByAccountNumber(accountsList, number)).getMoney() + money);
+        double peny = money * 0.01;
         opetaions.addSummComissions(peny);
         opetaions.creatingOperations(number, money, peny);
         serializableAndDesirializable.serializableAccount(accountsList);
@@ -100,7 +100,7 @@ opetaions.outputInformation(user);
             if (a.getId() == user.getId()) {
                 switch (a.getCurrency()) {
                     case BYN:
-                        transferCoefficient =opetaions.searchTransferCoefficientByCyrrency(BYN);
+                        transferCoefficient = opetaions.searchTransferCoefficientByCyrrency(BYN);
                         summ += a.getMoney() * transferCoefficient;
                         break;
                     case RUB:
@@ -127,20 +127,21 @@ opetaions.outputInformation(user);
     public void operationHistory(Users user) {
         List<OperationsHistory> historyList = serializableAndDesirializable.deserializeOperations();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyy");
-        for (OperationsHistory operation:historyList) {
-            if((user.getLogin().equals(operation.getLogin()))){
-                System.out.println("Чек "+operation.getNumberOperation()+
-                        "\nДата и время операции:" +operation.getDate().format(dateTimeFormatter)+
-                        ". Логин: "+operation.getLogin() +
-                        ". перевод "+operation.getMoney()+" "+operation.getCurrency()+
-                        " на счет "+operation.getNumberAccount()+". комиссия "+operation.getComissioms()+
-                        ". Итоговая сумма:"+(operation.getMoney()+operation.getComissioms()));
+        for (OperationsHistory operation : historyList) {
+            if ((user.getLogin().equals(operation.getLogin()))) {
+                System.out.println("Чек " + operation.getNumberOperation() +
+                        "\nДата и время операции:" + operation.getDate().format(dateTimeFormatter) +
+                        ". Логин: " + operation.getLogin() +
+                        ". перевод " + operation.getMoney() + " " + operation.getCurrency() +
+                        " на счет " + operation.getNumberAccount() + ". комиссия " + operation.getComissioms() +
+                        ". Итоговая сумма:" + (operation.getMoney() + operation.getComissioms()));
             }
         }
 
     }
+
     @Override
-    public Users changePassword(Users user,int newPassword) {
+    public Users changePassword(Users user, int newPassword) {
         List<Users> usersList = serializableAndDesirializable.deserializeUsers();
         usersList.get(user.getId()).setPassword(newPassword);
         user.setPassword(newPassword);
@@ -151,16 +152,16 @@ opetaions.outputInformation(user);
     @Override
     public Users changeLogin(Users user, String newlogin) {
         List<Users> usersList = serializableAndDesirializable.deserializeUsers();
-        boolean flag = opetaions.checkLogin( usersList,newlogin);
+        boolean flag = opetaions.checkLogin(usersList, newlogin);
         try {
-            if(!flag) {
+            if (!flag) {
                 usersList.get(user.getId()).setLogin(newlogin);
                 user.setLogin(newlogin);
                 System.out.println(user.getLogin());
-            }else{
+            } else {
                 throw new AutorizationException("Логин занят");
             }
-        } catch (AutorizationException e){
+        } catch (AutorizationException e) {
             System.err.println(e.getMessage());
         } catch (Throwable e) {
             e.printStackTrace();

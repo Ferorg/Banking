@@ -1,6 +1,6 @@
 package banking.exception;
 
-public class MenuException extends Exception{
+public class MenuException extends Exception {
     public MenuException(String message) {
         super(message);
     }

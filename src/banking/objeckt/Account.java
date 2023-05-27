@@ -11,16 +11,15 @@ public class Account implements Serializable {
     private Double money;
     public static double peny;
     public static final long serialVersionUID = 1l;
-private List<Account> accountList;
+    private List<Account> accountList;
 
 
-    public Account(int id,  int numberAccount,Currency currency, Double money) {
+    public Account(int id, int numberAccount, Currency currency, Double money) {
         this.id = id;
         this.currency = currency;
         this.numberAccount = numberAccount;
         this.money = money;
     }
-
 
 
     public int getId() {

@@ -2,7 +2,7 @@ package banking.fuctional;
 
 import banking.exception.AutorizationException;
 import banking.objeckt.*;
-import banking.repsitory.SerializableAndDesirializable;
+import banking.service.SerializableAndDesirializable;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -12,10 +12,11 @@ import java.util.Map;
 
 public class AdminOperations implements AbstractAdminOperation {
     SerializableAndDesirializable serializableAndDesirializable = new SerializableAndDesirializable();
-Opetaions opetaions =new Opetaions();
+    Opetaions opetaions = new Opetaions();
+
     @Override
     public void downloadCourseFile() {
-        Map<String,Double> map=serializableAndDesirializable.deserializeCurrencyDop();
+        Map<String, Double> map = serializableAndDesirializable.deserializeCurrencyDop();
         serializableAndDesirializable.serializableCurrency(map);
         System.out.println("Загрузка файла завершена");
     }
@@ -28,19 +29,20 @@ Opetaions opetaions =new Opetaions();
 
     @Override
     public void viewCustomerTransactions(String login) {
-        List<OperationsHistory> operationsHistories=serializableAndDesirializable.deserializeOperations();
-        for (OperationsHistory o:operationsHistories) {
+        List<OperationsHistory> operationsHistories = serializableAndDesirializable.deserializeOperations();
+        for (OperationsHistory o : operationsHistories) {
             if (o.getLogin().equals(login)) {
                 System.out.println(o.toString());
             }
-            }
         }
+    }
+
     @Override
     public void deletingClient(String login) {
         List<Users> users = serializableAndDesirializable.deserializeUsers();
         List<Account> accountList = serializableAndDesirializable.deserializeAccount();
         int tempId = opetaions.searcClientsIdByLogin(users, login);
-       accountList= opetaions.clientAccountDeletion(accountList, opetaions.searchAllAccountsById(accountList, tempId));
+        accountList = opetaions.clientAccountDeletion(accountList, opetaions.searchAllAccountsById(accountList, tempId));
         accountList = opetaions.idAccountRecalculating(accountList, tempId);
         users.remove(tempId);
         users = opetaions.idRecalculating(users);
@@ -50,10 +52,10 @@ Opetaions opetaions =new Opetaions();
 
     @Override
     public void viewAccountWithCommissions() {
-        List<Account> accountList=serializableAndDesirializable.deserializeAccount();
-        for (Account a:accountList) {
-            if(a.getId()==999){
-                System.out.println("Счет с комиссиями: "+a.toString());
+        List<Account> accountList = serializableAndDesirializable.deserializeAccount();
+        for (Account a : accountList) {
+            if (a.getId() == 999) {
+                System.out.println("Счет с комиссиями: " + a.toString());
                 break;
             }
 
@@ -63,9 +65,9 @@ Opetaions opetaions =new Opetaions();
 
     @Override
     public void viewTransactionsWithUnpaidCommissions() {
-        List<OperationsHistory> operationsHistories=serializableAndDesirializable.deserializeOperations();
-        for (OperationsHistory op:operationsHistories) {
-            if(op.getStatusOperations().equals(StatusOperations.NOTPAID)){
+        List<OperationsHistory> operationsHistories = serializableAndDesirializable.deserializeOperations();
+        for (OperationsHistory op : operationsHistories) {
+            if (op.getStatusOperations().equals(StatusOperations.NOTPAID)) {
                 System.out.println(op.toString());
             }
         }
@@ -78,10 +80,10 @@ Opetaions opetaions =new Opetaions();
         List<Double> commisions = serializableAndDesirializable.deserializeCommisions();
         for (Account a : accountList) {
             if (a.getId() == 999) {
-                a.setMoney(a.getMoney()+commisions.get(0));
+                a.setMoney(a.getMoney() + commisions.get(0));
             }
         }
-       double temp=0.0;
+        double temp = 0.0;
         List<Double> commisionss = new ArrayList<>();
         commisionss.add(temp);
         serializableAndDesirializable.serializableCommisions(commisionss);
@@ -91,7 +93,7 @@ Opetaions opetaions =new Opetaions();
     @Override
     public void receiveTheAmountOfCommissionsNotTransferredToTheAccount() {
         List<Double> commisions = serializableAndDesirializable.deserializeCommisions();
-        if(commisions!=null) {
+        if (commisions != null) {
             System.out.println("Сумма комиссий не перевведенных на счет: " + commisions.get(0).toString());
         }
     }
@@ -123,14 +125,14 @@ Opetaions opetaions =new Opetaions();
     public void viewAllTransactions() {
         List<OperationsHistory> historyList = serializableAndDesirializable.deserializeOperations();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyy HH:mm:ss");
-        for (OperationsHistory operations:historyList) {
-            System.out.println("Чек "+operations.getNumberOperation()+
-                    "\nДата и время операции:" +operations.getDate().format(dateTimeFormatter)+
-                    ". Логин: "+operations.getLogin() +
-                    ". перевод "+operations.getMoney()+" "+operations.getCurrency()+
-                    " на счет "+operations.getNumberAccount()+". комиссия "+operations.getComissioms()+
-                    ". Итоговая сумма:"+(operations.getMoney()+operations.getComissioms())+
-                    ". Статус операции "+operations.getStatusOperations().toString());
+        for (OperationsHistory operations : historyList) {
+            System.out.println("Чек " + operations.getNumberOperation() +
+                    "\nДата и время операции:" + operations.getDate().format(dateTimeFormatter) +
+                    ". Логин: " + operations.getLogin() +
+                    ". перевод " + operations.getMoney() + " " + operations.getCurrency() +
+                    " на счет " + operations.getNumberAccount() + ". комиссия " + operations.getComissioms() +
+                    ". Итоговая сумма:" + (operations.getMoney() + operations.getComissioms()) +
+                    ". Статус операции " + operations.getStatusOperations().toString());
         }
     }
 
@@ -155,7 +157,7 @@ Opetaions opetaions =new Opetaions();
             } else {
                 throw new AutorizationException("Логин занят");
             }
-        } catch (AutorizationException e){
+        } catch (AutorizationException e) {
             System.err.println(e.getMessage());
         } catch (Throwable e) {
             e.printStackTrace();

@@ -10,7 +10,6 @@ public enum Currency {
     Currency(String curency) {
         this.curency = curency;
     }
-
     public String getCurency() {
         return curency;
     }

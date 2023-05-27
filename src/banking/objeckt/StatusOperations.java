@@ -3,7 +3,7 @@ package banking.objeckt;
 public enum StatusOperations {
     PAID("ОПЛАЧЕНО"),
     NOTPAID("Не оплачено");
-   private String statusOperations;
+    private String statusOperations;
 
     StatusOperations(String statusOperations) {
         this.statusOperations = statusOperations;

@@ -16,11 +16,11 @@ public class OperationsHistory implements Serializable {
     private double money;
     private double comissioms;
     private StatusOperations statusOperations;
-    private static final long serialVersionUID =2;
+    private static final long serialVersionUID = 2;
 
     public OperationsHistory(LocalDateTime date, int numberOperation, String textOperation,
                              String login, int numberAccount, Currency currency, double money,
-                             double comissioms,StatusOperations statusOperations) {
+                             double comissioms, StatusOperations statusOperations) {
         this.date = date;
         this.numberOperation = numberOperation;
         this.textOperation = textOperation;
@@ -29,7 +29,7 @@ public class OperationsHistory implements Serializable {
         this.currency = currency;
         this.money = money;
         this.comissioms = comissioms;
-        this.statusOperations=statusOperations;
+        this.statusOperations = statusOperations;
     }
 
     public LocalDateTime getDate() {

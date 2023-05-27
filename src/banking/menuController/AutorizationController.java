@@ -2,23 +2,24 @@ package banking.menuController;
 
 import banking.fuctional.AutorizationOperation;
 import banking.objeckt.Users;
-import banking.repsitory.SerializableAndDesirializable;
+import banking.service.SerializableAndDesirializable;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class AutorizationController {
-    static boolean inMenu=true;
-     public Scanner inText=new Scanner(System.in);
-    Scanner inNumber=new Scanner(System.in);
+    static boolean inMenu = true;
+    public Scanner inText = new Scanner(System.in);
+    Scanner inNumber = new Scanner(System.in);
 
-    AutorizationOperation autorizationOperation=new AutorizationOperation();
-    SerializableAndDesirializable serializableAndDesirializable=new SerializableAndDesirializable();
-    public  void menu1(){
+    AutorizationOperation autorizationOperation = new AutorizationOperation();
+    SerializableAndDesirializable serializableAndDesirializable = new SerializableAndDesirializable();
+
+    public void menu1() {
         String login;
         int password;
         String name;
-        List<Users> users=serializableAndDesirializable.deserializeUsers();
+        List<Users> users = serializableAndDesirializable.deserializeUsers();
         System.out.println(users.toString());
         do {
             System.out.println("""
@@ -27,7 +28,7 @@ public class AutorizationController {
                     1)Авторизация.\s
                     2)Регистрация.\s
                     3)Выход.""");
-            int choise=inNumber.nextInt();
+            int choise = inNumber.nextInt();
             switch (choise) {
                 case 1 -> {
                     System.out.println("Авторизация:");
@@ -55,6 +56,6 @@ public class AutorizationController {
                 }
                 //выбрасывать свое исключение
             }
-        }while(inMenu);
+        } while (inMenu);
     }
 }
